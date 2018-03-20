@@ -53,26 +53,23 @@ export default function alertReducer(state = initialState, action) {
     case types.UPDATE_ALERTS:
       return {
         ...state,
-        data: [action.alert, ...state.data]
+        data: [
+          {...action.alert }, 
+          ...state.data
+        ]
       };
 
-    case types.SET_SELECTED_ALERT:
+    case types.SET_PAGE:
       return {
         ...state,
-        selectedAlert: { ...action.alert }
-      };
-
-    case types.SET_PAGE: 
-      return {
-        ...state, 
         page: action.page
-      }
+      };
 
     case types.SET_ROWS_PER_PAGE:
       return {
-        ...state, 
+        ...state,
         rowsPerPage: action.rowsPerPage
-      }
+      };
 
     //TODO rest of reducer logic ...
 

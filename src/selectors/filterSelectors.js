@@ -1,4 +1,4 @@
-import { createSelector } from "reselect";
+//import { createSelector } from "reselect";
 
 export const getFilters = state => state.filters.data;
 

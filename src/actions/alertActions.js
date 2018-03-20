@@ -85,12 +85,6 @@ export const updateAlerts = alert => ({
 /**
  * ---- On alert user interactions -----
  */
-const setSelectedAlert = alert => {
-  // type: types.SET_SELECTED_ALERT,
-  // alert
-
-};
-
 export const onRowClick = alert => dispatch => {
   //dispatch(setSelectedAlert(alert));
   dispatch(updateModalContent(alert));

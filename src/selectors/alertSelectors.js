@@ -15,7 +15,7 @@ export const makeGetAlertsList = () => {
     alertsList => alertsList.map(alert => {
       return { 
         ...alert,
-        timeGenerated: convertDateToString(alert.date) 
+        timeGenerated: convertDateToString(alert.timeGenerated) 
       };
     })
   );

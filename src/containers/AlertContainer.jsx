@@ -36,11 +36,6 @@ const makeMapStateToProps = (state, props) => {
   return mapStateToProps;
 };
 
-// const mapDispatchToProps =  () => ({
-//   onRowClick,
-
-// })
-
 const mapDispatchToProps = {
   onRowClick,
   setPage,

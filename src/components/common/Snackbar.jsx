@@ -1,58 +1,25 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-import Button from "material-ui/Button";
 import MUISnackbar from "material-ui/Snackbar";
 
-import { getIsSnackbarOpen } from "../selectors/alertSelectors";
-import { hideSnackbar } from "../actions/alertActions";
-
 class Snackbar extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      // open: false,
-      vertical: "top",
-      horizontal: "right"
-    };
-  }
-
   handleClose = () => {
-    //this.setState({ open: false });
-    console.log("closed snackbar from component");
-    this.props.closeSnackbar();
+    const {hideSnackbar} = this.props;
+    hideSnackbar();
   };
 
   render() {
-    const { vertical, horizontal } = this.state;
-    const { open } = this.props;
-
+    const { isOpen, content, color, position } = this.props;
     return (
       <MUISnackbar
-        anchorOrigin={{ vertical, horizontal }}
-        open={open}
+        anchorOrigin={position}
+        open={isOpen}
         onClose={this.handleClose}
-        message={<span>new alert added </span>}
+        message={<span>{content}</span>}
       />
     );
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    open: getIsSnackbarOpen(state)
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    closeSnackbar: () => dispatch(hideSnackbar())
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Snackbar);
-
-// SnackbarContentProps={{
-//   "aria-describedby": "message-id"
-// }}
+export default Snackbar;

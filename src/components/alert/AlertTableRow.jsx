@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { TableRow, TableCell } from "material-ui/Table";
 // import { withStyles } from "material-ui/styles";
 
-import AlertListIcon from "./AlertListIcon";
+import AlertTableRowIcon from "./AlertTableRowIcon";
 
 class AlertTableRow extends Component {
 
@@ -19,7 +19,7 @@ class AlertTableRow extends Component {
     return (
       <TableRow key={alert.id} hover onClick={this.onClick}>
         <TableCell>
-          <AlertListIcon alert={alert} />
+          <AlertTableRowIcon alert={alert} />
         </TableCell>
         <TableCell> {alert.name}</TableCell>
         <TableCell>{alert.source}</TableCell>
