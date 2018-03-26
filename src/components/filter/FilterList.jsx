@@ -16,7 +16,6 @@ import Button from "material-ui/Button";
 import Filter from "./Filter";
 import Loader from "../common/Loader";
 import {AND_QUERY, OR_QUERY, FIELDS} from "../../constants/filterConstants";
-//className={classes.heading}
 
 
 const styles = theme => ({

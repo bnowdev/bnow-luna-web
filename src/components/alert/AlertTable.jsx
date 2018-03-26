@@ -34,12 +34,16 @@ const styles = theme => ({
 });
 
 class AlertTable extends Component {
-
   renderEmptyRows = () => {
     const { alerts, page, rowsPerPage } = this.props;
-    const emptyRows =
-      rowsPerPage - Math.min(rowsPerPage, alerts.length - page * rowsPerPage);
-
+    // const emptyRows =
+    //   rowsPerPage - Math.min(rowsPerPage, alerts.length - page * rowsPerPage);
+    
+    let emptyRows = 0;
+    if(alerts.length < rowsPerPage ) {
+      emptyRows = rowsPerPage - alerts.length
+    }
+  
     return emptyRows > 0 ? (
       <TableRow style={{ height: 49 * emptyRows }}>
         <TableCell colSpan={6} />
@@ -51,12 +55,14 @@ class AlertTable extends Component {
     const {
       classes,
       alerts,
+      count,
       areLoading,
       page,
       rowsPerPage,
-      onRowClick, 
-      setPage,
-      setRowsPerPage
+      onRowClick,
+      changePage,
+      changePageSize,
+      changeSortBy
     } = this.props;
 
     return (
@@ -65,11 +71,11 @@ class AlertTable extends Component {
         <AlertTableTitle />
         <Table className={classes.table}>
           <TableHead>
-            <AlertTableHeading />
+            <AlertTableHeading changeSortBy={changeSortBy} />
           </TableHead>
           <TableBody>
             {alerts
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map(alert => {
                 return (
                   <AlertTableRow
@@ -83,11 +89,11 @@ class AlertTable extends Component {
             {this.renderEmptyRows()}
           </TableBody>
           <AlertTableFooter
-            count={alerts.length}
+            count={count}
             rowsPerPage={rowsPerPage}
             page={page}
-            setPage={setPage}
-            setRowsPerPage={setRowsPerPage}
+            changePage={changePage}
+            changePageSize={changePageSize}
           />
         </Table>
       </Paper>
@@ -98,12 +104,14 @@ class AlertTable extends Component {
 AlertTable.propTypes = {
   classes: PropTypes.object.isRequired,
   alerts: PropTypes.array.isRequired,
+  count: PropTypes.number.isRequired,
   areLoading: PropTypes.bool.isRequired,
   page: PropTypes.number.isRequired,
   rowsPerPage: PropTypes.number.isRequired,
   onRowClick: PropTypes.func.isRequired,
-  setPage: PropTypes.func.isRequired,
-  setRowsPerPage: PropTypes.func.isRequired
+  changePage: PropTypes.func.isRequired,
+  changePageSize: PropTypes.func.isRequired,
+  changeSortBy: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(AlertTable);

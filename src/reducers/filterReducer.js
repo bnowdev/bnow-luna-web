@@ -2,7 +2,6 @@ import * as types from "../constants/actionTypes";
 
 const initialState = {
   data: [],
-  orderByField: ""
 };
 
 export default function filterReducer(state = initialState, action) {

@@ -5,14 +5,14 @@ import { Provider } from "react-redux";
 import App from "./components/App";
 import "./styles/index.css";
 import configureStore from "./store/configureStore";
-import {getInitialAlerts, loadingAlerts} from "./actions/alertActions";
+import {getInitialAlerts, loadingAlerts, fetchAlerts} from "./actions/alertActions";
 import SignalrService from "./services/signalrService";
 
 import registerServiceWorker from "./registerServiceWorker";
 
 const store = configureStore();
 //store.dispatch(loadingAlerts());
-store.dispatch(getInitialAlerts());
+store.dispatch(fetchAlerts());
 
 const signalrService = new SignalrService(store);
 

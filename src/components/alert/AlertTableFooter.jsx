@@ -5,14 +5,14 @@ import { TableRow, TableFooter, TablePagination } from "material-ui/Table";
 
 class AlertTableFooter extends Component {
 
-  onChangePage = (event, page) => {
-    const {setPage} = this.props;
-    setPage(page);
+  handleChangePage = (event, page) => {
+    const {changePage} = this.props;
+    changePage(page);
   }
 
-  onChangeRowsPerPage = (event) => {
-    const {setRowsPerPage} = this.props;
-    setRowsPerPage(event.target.value);
+  handleChangePageSize = (event) => {
+    const {changePageSize} = this.props;
+    changePageSize(event.target.value);
   }
 
   render() {
@@ -26,8 +26,8 @@ class AlertTableFooter extends Component {
             count={count}
             rowsPerPage={rowsPerPage}
             page={page}
-            onChangePage={this.onChangePage}
-            onChangeRowsPerPage={this.onChangeRowsPerPage}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangePageSize}
             // Actions={TablePaginationActionsWrapped}
           />
         </TableRow>
@@ -40,8 +40,8 @@ AlertTableFooter.propTypes = {
   count: PropTypes.number.isRequired,
   page: PropTypes.number.isRequired,
   rowsPerPage: PropTypes.number.isRequired,
-  setRowsPerPage: PropTypes.func.isRequired,
-  setPage: PropTypes.func.isRequired
+  changePage: PropTypes.func.isRequired,
+  changePageSize: PropTypes.func.isRequired,
 };
 
 export default AlertTableFooter;

@@ -3,6 +3,106 @@ import { API_URL } from "../constants/apiConstants";
 import { showSnackbar, hideSnackbar, updateSnackbar } from "./snackbarActions";
 import { openModal, updateModalContent } from "./modalActions";
 
+import {
+  getSortBy,
+  getCurrentPage,
+  getAlertsPerPage
+} from "../selectors/alertSelectors";
+import { getFilters } from "../selectors/filterSelectors";
+
+import { constructFilterQuery } from "../utils/filterUtils";
+
+
+export const isFetchingAlerts = () => ({
+  type: types.ALERT_IS_FETCHING_ALERTS
+});
+
+export const fetchAlertsSuccess = payload => ({
+  type: types.ALERT_FETCH_ALERTS_SUCCESS,
+  payload
+});
+
+export const fetchAlertsError = error => ({
+  type: types.ALERT_FETCH_ALERTS_ERROR,
+  error
+});
+
+export const fetchAlerts = () => async (dispatch, getState) => {
+  try {
+    dispatch(isFetchingAlerts());
+
+
+    const state = getState();
+    const alertsFilters = getFilters(state);
+    const alertsSortBy = getSortBy(state);
+    const alertsPageIndex = getCurrentPage(state);
+    const alertsPageSize = getAlertsPerPage(state);
+
+    const query = constructFilterQuery(
+      alertsFilters,
+      alertsSortBy,
+      alertsPageIndex,
+      alertsPageSize
+    );
+
+    const response = await fetch(`${API_URL}/alerts${query}`);
+    const json = await response.json();
+    // destructure json and return new payload object
+    // const payload = ({ data, pageIndex, pageSize, count }) =>
+    //   ({
+    //     data,
+    //     pageIndex,
+    //     pageSize,
+    //     count
+    //   }(json));
+
+    const {data, pageIndex, pageSize, count} = json;
+    const payload = {
+      data,
+      pageIndex,
+      pageSize,
+      count
+    }
+    
+    dispatch(fetchAlertsSuccess(payload));
+
+  } catch (error) {
+
+    dispatch(fetchAlertsError(error));
+    throw error;
+  }
+};
+
+export const changePage = (page) => async dispatch => {
+  dispatch({
+    type: types.ALERT_CHANGE_PAGE,
+    payload: page
+  });
+
+  await dispatch(fetchAlerts());
+} 
+
+export const changePageSize = (pageSize) => async dispatch => {
+  dispatch({
+    type: types.ALERT_CHANGE_PAGE_SIZE,
+    payload: pageSize
+  });
+
+  await dispatch(fetchAlerts());
+}
+
+export const changeSortBy = (sortBy) => async dispatch => {
+  dispatch({
+    type: types.ALERT_SORT_BY_ALERTS,
+    payload: sortBy
+  });
+
+  await dispatch(fetchAlerts());
+}
+
+
+
+
 /**
  * ----- Loading alerts actions -----
  */
@@ -14,6 +114,9 @@ export const loadingAlertsEnd = () => {
   return { type: types.LOADING_ALERTS_END };
 };
 
+
+
+
 /**
  * ----- On app start alert actions -----
  */
@@ -21,9 +124,12 @@ export const getInitialAlerts = () => async dispatch => {
   try {
     dispatch(loadingAlerts());
 
-    let response = await fetch(`${API_URL}/alerts`);
-    let alerts = await response.json();
-    dispatch(getInitialAlertsSuccess(alerts));
+    const response = await fetch(`${API_URL}/alerts`);
+    const json = await response.json();
+    const { data, pageIndex, pageSize, count } = json;
+
+    dispatch(setPagingInfo(pageIndex, pageSize, count));
+    dispatch(getInitialAlertsSuccess(data));
   } catch (error) {
     dispatch(getInitialAlertsError(error));
     throw error;
@@ -48,8 +154,11 @@ export const getFilteredAlerts = query => async dispatch => {
 
   try {
     let response = await fetch(`${API_URL}/alerts${query}`);
-    let filteredAlerts = await response.json();
-    dispatch(getFilteredAlertsSuccess(filteredAlerts));
+    let json = await response.json();
+    const { data, pageIndex, pageSize, count } = json;
+    dispatch(setPagingInfo(pageIndex, pageSize, count));
+    dispatch(getFilteredAlertsSuccess(data));
+    dispatch();
   } catch (error) {
     dispatch(getFilteredAlertsError(error));
     throw error;
@@ -91,6 +200,13 @@ export const onRowClick = alert => dispatch => {
   dispatch(openModal());
 };
 
+export const setPagingInfo = (page, rowsPerPage, totalItems) => ({
+  type: types.SET_PAGING_INFO,
+  page,
+  rowsPerPage,
+  totalItems
+});
+
 export const setPage = page => ({
   type: types.SET_PAGE,
   page
@@ -99,4 +215,9 @@ export const setPage = page => ({
 export const setRowsPerPage = rowsPerPage => ({
   type: types.SET_ROWS_PER_PAGE,
   rowsPerPage
+});
+
+export const setAreFiltered = areFiltered => ({
+  type: types.SET_ARE_FILTERED,
+  areFiltered
 });

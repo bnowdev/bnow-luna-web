@@ -1,7 +1,7 @@
 import * as types from "../constants/actionTypes";
-import { getFilteredAlerts } from "../actions/alertActions";
+import { fetchAlerts } from "../actions/alertActions";
 import { getFilters, getOrderByField } from "../selectors/filterSelectors";
-import {constructFilterQuery } from "../utils/filterUtils";
+import { constructFilterQuery } from "../utils/filterUtils";
 
 export const addAlertsFilter = filter => ({
   type: types.ADD_ALERTS_FILTER,
@@ -18,15 +18,18 @@ export const removeAlertsFilter = filter => ({
   filter
 });
 
-export const clearAlertsFilters = () => ({
-  type: types.CLEAR_ALERTS_FILTERS
-});
+export const clearAlertsFilters = () => async dispatch => {
+  
+  dispatch({
+    type: types.CLEAR_ALERTS_FILTERS
+  });
+
+  await dispatch(fetchAlerts());
+
+};
 
 export const runFilters = () => async (dispatch, getState) => {
-  const queryFilters = getFilters(getState());
-  const orderBy = getOrderByField(getState());
-  const query = constructFilterQuery(queryFilters, orderBy);
-  await dispatch(getFilteredAlerts(query));
+  await dispatch(fetchAlerts());
 };
 
 //export const runningFiltersStart()
