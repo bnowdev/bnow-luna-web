@@ -1,2 +1,9 @@
 html { font-family: 'Roboto', sans-serif; }
 
+.picker {
+  display: flex;
+  padding-top: 7px;
+  width: 80%;
+  /* margin-bottom: 40px;
+  margin: 10px 40px 40px; */
+}

@@ -8,6 +8,7 @@ import { MenuItem } from "material-ui/Menu";
 import { FormControl } from "material-ui/Form";
 import Select from "material-ui/Select";
 
+import FilterDateTimePicker from "./FilterDateTimePicker";
 import * as types from "../../constants/filterConstants";
 
 const styles = theme => ({
@@ -16,7 +17,6 @@ const styles = theme => ({
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit,
     width: "100%"
-    // minWidth: 150
   },
   textField: {
     width: "100%"
@@ -28,7 +28,6 @@ const FilterValue = ({ classes, onValueChange, filter }) => {
     case types.SOURCE:
     case types.NAME:
       return (
-        // <FormControl className={classes.formControl}>
         <TextField
           multiline
           label="Name"
@@ -37,7 +36,6 @@ const FilterValue = ({ classes, onValueChange, filter }) => {
           onChange={onValueChange(filter)}
           margin="dense"
         />
-        //  </FormControl>
       );
 
     case types.SEVERITY:
@@ -54,7 +52,12 @@ const FilterValue = ({ classes, onValueChange, filter }) => {
 
     // TODO
     case types.GENERATED_AT:
-      return <div> NOT IMPLEMENTED </div>;
+      return (
+        <FilterDateTimePicker
+          value={filter.value}
+          onChange={onValueChange(filter)}
+        />
+      );
 
     default:
       return (
@@ -62,8 +65,6 @@ const FilterValue = ({ classes, onValueChange, filter }) => {
           disabled
           label="Filter Value"
           className={classes.textField}
-          // value={filter.value}
-          // onChange={onValueChange(filter)}
           margin="dense"
         />
       );

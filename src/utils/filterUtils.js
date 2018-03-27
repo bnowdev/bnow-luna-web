@@ -1,4 +1,5 @@
-import { FIELDS, OR_QUERY } from "../constants/filterConstants";
+import { GENERATED_AT, FIELDS, OR_QUERY } from "../constants/filterConstants";
+import { parseMomentToJsonString } from "./dateUtils";
 
 /**
  * @param {Object} operators
@@ -26,9 +27,17 @@ export const constructFilterQuery = (filters, sortBy, pageIndex, pageSize) => {
   if (filters && filters.length > 0) {
     query += "?query=";
     filters.forEach((filter, index) => {
-      const stringfilter = `${filter.field}__${filter.operator}__${
-        filter.value
-      }`;
+
+      let filterValue = filter.value;
+      let filterField = filter.field;
+
+      if (filterField === GENERATED_AT) {
+        filterValue = parseMomentToJsonString(filterValue);
+        filterField = "timeGenerated";
+      }
+
+      const stringfilter = `${filterField}__${filter.operator}__${filterValue}`;
+
       if (index === 0) {
         query += stringfilter;
       } else {
@@ -78,3 +87,4 @@ export const constructFilterQuery = (filters, sortBy, pageIndex, pageSize) => {
 
   return query;
 };
+

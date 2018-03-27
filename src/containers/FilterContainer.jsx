@@ -6,12 +6,28 @@ import { connect } from "react-redux";
 import * as filterActions from "../actions/filterActions";
 import { getFilters } from "../selectors/filterSelectors";
 import FilterList from "../components/filter/FilterList";
-import { NONE } from "../constants/filterConstants";
+import { GENERATED_AT, NONE } from "../constants/filterConstants";
+
+import { getCurrentMomentDate } from "../utils/dateUtils";
 
 class FilterContainer extends Component {
   handleFieldChange = filter => event => {
-    const newFilter = { ...filter, field: event.target.value };
-    this.props.actions.updateAlertsFilter(newFilter);
+    const { updateAlertsFilter } = this.props.actions;
+
+    const newField = event.target.value;
+
+    if (newField === GENERATED_AT) {
+    
+      const newValue = getCurrentMomentDate();
+      const newFilter = { ...filter, field: newField, value: newValue };
+      updateAlertsFilter(newFilter);
+    
+    } else {
+
+      const newFilter = { ...filter, field: newField };
+      updateAlertsFilter(newFilter);
+    
+    }
   };
 
   handleOperatorChange = filter => event => {
@@ -20,7 +36,15 @@ class FilterContainer extends Component {
   };
 
   handleValueChange = filter => event => {
-    const newValue = { ...filter, value: event.target.value };
+    let newValue = null;
+    
+    // a moment date object is returned
+    if (filter.field === GENERATED_AT) {
+      newValue = { ...filter, value: event };
+    }else{
+      newValue = { ...filter, value: event.target.value };
+    }
+
     this.props.actions.updateAlertsFilter(newValue);
   };
 
@@ -44,7 +68,7 @@ class FilterContainer extends Component {
 
   handleRunFilters = () => {
     this.props.actions.runFilters();
-  }
+  };
 
   render() {
     return (
